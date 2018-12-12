@@ -1,0 +1,30 @@
+---
+driver:
+  name: azurerm
+  subscription_id: 'YOUR_SUBSCRITPION_ID'
+  location: 'West Europe'
+  machine_size: 'Standard_DS1_v2'
+
+verifier:
+  name: inspec
+
+provisioner:
+  name: chef_zero
+
+platforms:
+  - name: Windows-2016
+    driver:
+      image_urn: MicrosoftWindowsServer:WindowsServer:2016-Datacenter:latest
+      explicit_resource_group_name: RG-DEV-CHEFKITCHEN-WE-01
+      destroy_explicit_resource_group: false
+      destroy_resource_group_contents: true
+    transport:
+      name: winrm
+suites:
+  - name: default
+    run_list:
+      - recipe[chefWindowsIIS::default]
+    attributes:
+    verifier:
+      inspec_tests:
+        - test/integration/default
